@@ -1,10 +1,11 @@
 # **mercure-totalsegmentator**
 <br>
 
-Mercure module to deploy [TotalSegmentator](https://github.com/wasserth/TotalSegmentator) tool for segmentation of 104 classes in CT images. This module runs as a docker container in mercure, it can be added to an existing mercure installation using docker tag : *mercureimaging/mercure-totalsegmentator*.
+Mercure module to deploy [TotalSegmentator](https://github.com/wasserth/TotalSegmentator) tool for segmentation of 104 classes in CT images and 56 classes in MR images. This module runs as a docker container in mercure, it can be added to an existing mercure installation using docker tag : 
+`mercureimaging/mercure-totalsegmentator:v2`.
 <br>
-The current version of the module is configured to run the TotalSegmentator at at lower resolution (3mm) so it is CPU compatible. To run at high resolution, minor code edits are required to remove the *--fast* TotalSegmentator option and to enable GPU processing if desired.
-
+The current version of the module is configured to run the TotalSegmentator at a lower resolution (3mm) if only CPU is available and at high resolution when GPU (cuda device) is available.
+Also, the pipeline will automatically run the correct subcommand for TotalSegmentator depending on whether the input data is 'CT' or 'MR'.
 <br>
 
 # Installation
@@ -29,7 +30,11 @@ Install [virtual box](https://www.virtualbox.org/) and [vagrant](https://www.vag
 1. Clone repo.
 2. Build Docker container locally by running make (modify makefile with new docker tag as needed).
 3. Test container :\
-`docker run -it -v /input_data:/input -v /output_data:/output --env MERCURE_IN_DIR=/input  --env MERCURE_OUT_DIR=/output *docker-tag*`
+`docker run -it -v /input_data:/input -v /output_data:/output --env MERCURE_IN_DIR=/input  --env MERCURE_OUT_DIR=/output --shm-size 1G *docker-tag*`
+
+### Note
+The default shared memory (shm) size for Docker container might not be sufficient to run the container. Thus, `--shm-size 1G` is included in the above command. Similarly, when configuring this module in Mercure, add the following as one of the docker arguments:
+`"shm_size": "1G"`
 
 <br>
 
