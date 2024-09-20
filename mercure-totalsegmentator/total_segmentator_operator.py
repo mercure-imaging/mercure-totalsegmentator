@@ -50,12 +50,21 @@ class TotalSegmentatorOperator(Operator):
         print("device being used:", device)
 
         # Run TotalSegmentator
+        from dcm2nii_operator import input_modality
+        print("Modality of input data:", input_modality)
         if device == torch.device("cuda"):
             print("running full version")
-            subprocess.run(["TotalSegmentator", "-i", nii_input_file, "-o", nii_seg_output_path,"--ml"])
+            # check if the input data is MR or CT
+            if input_modality == "CT":
+                subprocess.run(["TotalSegmentator", "-i", nii_input_file, "-o", nii_seg_output_path,"--ml"])
+            elif input_modality == "MR":
+                subprocess.run(["TotalSegmentator", "-i", nii_input_file, "-o", nii_seg_output_path,"--ml","--task", "total_mr"])
         else:
             print("running fast version")
-            subprocess.run(["TotalSegmentator", "-i", nii_input_file, "-o", nii_seg_output_path,"--fast","--ml"])
+            if input_modality == "CT":
+                subprocess.run(["TotalSegmentator", "-i", nii_input_file, "-o", nii_seg_output_path,"--fast","--ml"])
+            elif input_modality == "MR":
+                subprocess.run(["TotalSegmentator", "-i", nii_input_file, "-o", nii_seg_output_path,"--fast","--ml", "--task", "total_mr"])
         
 
         logging.info(f"Performed TotalSegmentator processing")

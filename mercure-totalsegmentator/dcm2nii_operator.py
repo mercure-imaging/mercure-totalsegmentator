@@ -3,6 +3,7 @@ import logging
 import os
 import shutil
 import subprocess
+import pydicom
 from pathlib import Path
 
 
@@ -18,6 +19,9 @@ from monai.deploy.core import (
     OutputContext,
     resource
 )
+
+global input_modality
+input_modality = None
 
 # DICOM to NIfTI conversion operator
 # code resused / adapted from TOTALSegmentator- AIDE, see https://github.com/GSTT-CSC/TotalSegmentator-AIDE
@@ -41,6 +45,23 @@ class Dcm2NiiOperator(Operator):
             input_files = sorted(os.listdir(input_path))  # assumes .dcm in input/
         else:
             input_files = parse_recursively_dcm_files(input_path)  # assumes AIDE MinIO structure
+
+        # Read the first input file from input files and extract the modality from the dicom tags
+        reference_file = None
+        for f in input_files:
+            if f.endswith('.dcm'):
+                reference_file = f
+                break
+        modality = None
+        try:
+            file_path = os.path.join(input_path, reference_file)
+            dicom_file = pydicom.dcmread(file_path)
+            modality = dicom_file.Modality
+        except Exception as e:
+            logging.error(f"Error reading DICOM file: {e}")
+        # Set a global variable named input_modality to be used in the other file
+        global input_modality
+        input_modality = modality
 
         # create directories and move input DICOM files for later
         current_dir = os.getcwd()
