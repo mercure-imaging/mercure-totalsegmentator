@@ -33,8 +33,24 @@ Install [virtual box](https://www.virtualbox.org/) and [vagrant](https://www.vag
 `docker run -it -v /input_data:/input -v /output_data:/output --env MERCURE_IN_DIR=/input  --env MERCURE_OUT_DIR=/output --shm-size 1G *docker-tag*`
 
 ### Note
-The default shared memory (shm) size for Docker container might not be sufficient to run the container. Thus, `--shm-size 1G` is included in the above command. Similarly, when configuring this module in Mercure, add the following as one of the docker arguments:
+* The default shared memory (shm) size for Docker container might not be sufficient to run the container. Thus, `--shm-size 1G` is included in the above command. Similarly, when configuring this module in Mercure, add the following as one of the docker arguments:
 `"shm_size": "1G"`
+
+* The container can take quite some time to finish (especially if not using GPU). Still, if it appears stuck for a long time even after trying with a small subset of data, it can be due to incompatible versions of the packages, while doing local development. 
+Due to that, the predictions do not get saved and the next operator keeps on waiting. You can step inside the container and run the code directly to verify what is going on:
+
+
+  `docker run -it -v /input_data:/input -v /output_data:/output --env MERCURE_IN_DIR=/input  --env MERCURE_OUT_DIR=/output --shm-size 1G *docker-tag* bash`
+
+
+  With that, you will step inside the Docker container and then after that:
+
+
+  `python mercure-totalsegmentator -i $MERCURE_IN_DIR -o $MERCURE_OUT_DIR`
+
+* You can also check out the logs of the container directly:
+
+  `docker logs <container_id>`
 
 <br>
 
