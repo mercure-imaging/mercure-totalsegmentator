@@ -76,7 +76,7 @@ class Dcm2NiiOperator(Operator):
 
         for f in input_files:
             if not f.endswith('.json'):
-                shutil.move(os.path.join(input_path, f), dcm_input_path)
+                shutil.copy(os.path.join(input_path, f), dcm_input_path)
 
         
         print(dcm_input_path)

@@ -1,6 +1,7 @@
 import logging
 import os
 import torch
+import sys
 import shutil
 import subprocess
 from pathlib import Path
@@ -67,7 +68,13 @@ class TotalSegmentatorOperator(Operator):
                 subprocess.run(["TotalSegmentator", "-i", nii_input_file, "-o", nii_seg_output_path,"--fast","--ml", "--task", "total_mr"])
         
 
+        logging.info(f"output files: {os.listdir(os.path.join(input_path, 'nii_input'))}")
         logging.info(f"Performed TotalSegmentator processing")
+        if 'nii_seg_output.nii' not in os.listdir(os.path.join(input_path, 'nii_input')):
+            # Note: make sure --shm-size 1G is set while debugging.
+            logging.error(f"TotalSegmentator failed to produce prediction output nii_seg_output.nii file")
+            logging.info("Ensure --shm-size 1G is set while debugging.")
+            sys.exit(1)
 
         # Set output path for next operator
         op_output.set(DataPath(input_path))  # cludge to avoid op_output not exist error

@@ -12,8 +12,8 @@ dependencies:
     - TotalSegmentator==2.4.0
     - monai-deploy-app-sdk==0.5.0
     - matplotlib==3.6.2
-    - typeguard~=2.12.1 # Work around MONAI requirements.txt bug that picks up the wrong typeguard version
-    - highdicom
-    - rt-utils
-    - torch>=1.12.0
-
+    - typeguard==2.12.1
+    - highdicom==0.22.0
+    - rt-utils==1.2.7
+    - torch==2.4.1
+    - acvl_utils==0.2
