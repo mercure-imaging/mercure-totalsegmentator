@@ -13,7 +13,7 @@ Also, the pipeline will automatically run the correct subcommand for TotalSegmen
 
 
 ## Add module to existing Mercure installation
-Follow instructions on [Mercure website](https://mercure-imaging.org) on how to add a new module. Use the docker tag *mercureimaging/mercure-totalsegmentator*.
+Follow instructions on [Mercure website](https://mercure-imaging.org) on how to add a new module. Use the docker tag *mercureimaging/mercure-totalsegmentator:v2*.
 
 <br>
 
@@ -47,10 +47,6 @@ Due to that, the predictions do not get saved and the next operator keeps on wai
 
 
   `python mercure-totalsegmentator -i $MERCURE_IN_DIR -o $MERCURE_OUT_DIR`
-
-* You can also check out the logs of the container directly:
-
-  `docker logs <container_id>`
 
 <br>
 
