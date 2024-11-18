@@ -36,6 +36,14 @@ Install [virtual box](https://www.virtualbox.org/) and [vagrant](https://www.vag
 * The default shared memory (shm) size for Docker container might not be sufficient to run the container. Thus, `--shm-size 1G` is included in the above command. Similarly, when configuring this module in Mercure, add the following as one of the docker arguments:
 `"shm_size": "1G"`
 
+* If using Vagrant, ensure enough memory is allocated in the Vagrantfile, as the memory [requirements](https://github.com/wasserth/TotalSegmentator?tab=readme-ov-file#resource-requirements) can be quite high when using TotalSegmentator.
+  ```
+  config.vm.provider "virtualbox" do |vb|
+     vb.memory = "24576"
+     vb.cpus = 6
+  end
+  ```
+
 * The container can take quite some time to finish (especially if not using GPU). Still, if it appears stuck for a long time even after trying with a small subset of data, it can be due to incompatible versions of the packages, while doing local development. 
 Due to that, the predictions do not get saved and the next operator keeps on waiting. You can step inside the container and run the code directly to verify what is going on:
 
